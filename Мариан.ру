@@ -1,0 +1,42 @@
+import pandas as pd
+import cred
+import numpy as np
+info = pd.read_csv('info.csv', index_col='currency')
+
+def get_data(token):
+    url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={token}&interval={time}&apikey={cred.API_KEY}&datatype=csv'
+    return pd.read_csv(url)
+
+token = 'AAPL'
+# time = '60min'
+df = get_data(token)
+print(df)
+print(np.mean(df['close'][0:7]))
+print(df['close'][0:7])
+
+def find_num (token):
+  df = get_data(token)
+  MA_7 = np.mean(df['close'][0:7])
+  MA_25 = np.mean(df['close'][0:25])
+  if MA_7 >= MA_25:
+    num = 1
+  else:
+    num = 0
+  return num
+
+# Конечная функция анализа и решение по продаже /покупке
+def trader(token):
+  num = find_num (token)
+  if info['position'][token] != num:
+    if num == 1:
+      print(f'Для {token}. Быстрая скользящая пересекла среднюю снизу вверх, КУПИТЬ!')
+    else:
+      print(f'Для {token}. Быстрая скользящая пересекла среднюю сверху вниз, ПРОДАВАТЬ!')
+    info['position']token] = num
+    return info
+  else:
+    if num == 1:  
+    
+    for curr in info.index:
+  trader(token)
+print (info)
